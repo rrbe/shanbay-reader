@@ -1,0 +1,32 @@
+{
+    "manifest_version": 2,
+
+    "name": "shanbay-reader",
+    "description": "a chrome plugin which makes shanbay news easier to read.",
+    "version": "1.0",
+
+    "permissions": [
+        "tabs",
+        "https://api.shanbay.com/"
+    ],
+    
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_title": "shanbay-reader",
+        "default_popup": "popup.html"
+    },
+
+    "background": {
+        "scripts": [
+            "js/getWords.js"
+        ]
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["http://localhost/test.html"],
+            "js": ["js/getWords.js"],
+            "css": ["css/bubble.css"]
+        }
+    ]
+}
