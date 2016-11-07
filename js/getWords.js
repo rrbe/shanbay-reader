@@ -25,11 +25,9 @@ function wrapSpan() {
 		makeHttpRequest('get', searchLink,
 			null, function (res) {
 				if (res.status_code == 0) {
-					// console.log(res.msg);
-					// //测试api
-					// console.log(res.data.definition.trim());
-					var _bubble = bubbleBox(tar, res.data.definition.trim());
+					var _bubble = bubbleBox(tar, res.data);
 					_bubble();
+
 				}
 			});
 		event.stopPropagation();
@@ -61,6 +59,22 @@ var singleton = function(fn){
 }
 var bubble = singleton(function () {
 	return document.createElement('span');
+});
+
+var speakerImg = singleton(function (prop) {
+	var img = document.createElement('img');
+	img.src = chrome.extension.getURL('static/speaker.png');
+	img.id = 'mySpeaker';
+	img.appendChild(pron( prop ));
+
+	return img;
+});
+
+var pron = singleton(function (prop) {
+	var pronunciation = document.createElement('audio');
+	pronunciation.id = 'myAudio';
+
+	return pronunciation;
 });
 
 //ele: 气泡框应该贴近的元素  msg: 气泡框上显示的消息
@@ -102,7 +116,6 @@ function getElementViewTop (ele) {
 //扩展classList方法，一次可以添加多个类名,classList本质上是DOMTokenList
 DOMTokenList.prototype.adds = function (str) {
 	str.split(' ').forEach(function (s) {
-		console.log(this);
 		this.add(s);
 	}.bind(this));
 
@@ -139,14 +152,31 @@ function bubblePosCtrl (ele, bub, msg) {
 	} else {
 		//arrow in bottom	
 	}
+
+	//此时speaker已经被创建
+	speakerCtrl(document.getElementById('mySpeaker'), bub);
 }
 
 function bubbleDirectionInit (ele, bub, msg) {
 	//初始化位置用arrow in bottom的默认位置，看是否越界或被遮盖
 	bub.setAttribute('class', '');
 	bub.classList.adds('bubble bubble-bottom');
-	bub.innerHTML = message;
-	element.parentNode.insertBefore(bub, ele);
+	var _speaker = speakerImg();
+	bub.innerHTML = msg.definition;
+	_speaker.childNodes[0].src = msg.audio;
+	ele.parentNode.insertBefore(bub, ele);
+	ele.parentNode.insertBefore(_speaker, bub);
 	bub.style.top = (ele.offsetTop - bub.offsetHeight - 30) + 'px';
 	bub.style.left = (ele.offsetLeft - Math.floor(bub.offsetWidth/2)) + 'px';
+}
+
+function speakerCtrl (spker, bub) {
+	spker.style.position = 'absolute';
+	spker.style.zIndex = 999;
+	spker.style.top = (bub.offsetTop + 10) + 'px';
+	spker.style.left = (bub.offsetLeft + 10) + 'px';
+
+	spker.addEventListener('click', function () {
+		document.getElementById('myAudio').play();
+	});
 }

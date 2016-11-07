@@ -3,12 +3,11 @@
 	position: absolute;
 	width: 300px;
 	height: auto;
-	padding: 10px;
+	padding: 10px 10px 10px 30px;
 	background-color: #cccccc;
 	text-align: center;
 	border: 1px solid #cccccc;
 	border-radius: 5px;
-	z-index: 999;
 }
 .bubble-bottom::after, .bubble-top::before, .bubble-left::after, .bubble-right::after{
 	content: "";

@@ -28,5 +28,7 @@
             "js": ["js/getWords.js"],
             "css": ["css/bubble.css"]
         }
-    ]
+    ],
+
+    "web_accessible_resources": ["static/speaker.png"]
 }
