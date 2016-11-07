@@ -1,8 +1,9 @@
 .bubble {
-	display: inline-block;
+	display: block;
 	position: absolute;
-	width: 100px;
-	padding: 20px;
+	width: 300px;
+	height: auto;
+	padding: 10px;
 	background-color: #cccccc;
 	text-align: center;
 	border: 1px solid #cccccc;
@@ -30,9 +31,11 @@
 	border-width: 15px 30px 15px 0px;
 	border-color: transparent #cccccc;
 	left: -30px;
+	top: 5%;
 }
 .bubble-right::after {
 	border-width: 15px 0px 15px 30px;
 	border-color: transparent #cccccc;
 	right: -30px;
+	top: 5%;
 }

@@ -63,50 +63,90 @@ var bubble = singleton(function () {
 	return document.createElement('span');
 });
 
-//element: 气泡框应该贴近的元素  message: 气泡框上显示的消息
-function bubbleBox(element, message) {
-	this.element = element;
-	this.message = message;
+//ele: 气泡框应该贴近的元素  msg: 气泡框上显示的消息
+function bubbleBox(ele, msg) {
+	this.element = ele;
+	this.message = msg;
 	return function show() {
-		var bub = bubble();
-		//处理前后左右
-		bub.classList.adds('bubble bubble-bottom');
-		this.element.parentNode.insertBefore(bub, this.element);
-		//气泡的位置：指示元素的高度 - 气泡元素自身高度 - 30箭头高度
-		bub.style.top = (getElementTop(this.element) - bub.clientHeight - 30) + 'px';
-		bub.style.left = (getElementLeft(this.element) - Math.floor(bub.clientWidth/2)) + 'px';
+		var _bub = bubble();
+		bubblePosCtrl(this.element, _bub, this.message);
 	}
 }
 
-function getElementLeft(element) {
-	var actualLeft = element.offsetLeft;
-	var current = element.offsetParent;
+function getElementViewLeft(ele) {
+	var actualLeft = ele.offsetLeft;
+	var current = ele.offsetParent;
 
 	while (current !== null) {
 		actualLeft += current.offsetLeft;
 		current = current.offsetParent;
 	}
+	var elementScrollLeft = document.documentElement.scrollLeft;
 
-	return actualLeft;
+	return actualLeft - elementScrollLeft;
 }
 
-function getElementTop (element) {
-	var actualTop = element.offsetTop;
-	var current = element.offsetParent;
+function getElementViewTop (ele) {
+	var actualTop = ele.offsetTop;
+	var current = ele.offsetParent;
 
 	while(current !== null) {
 		actualTop += current.offsetTop;
 		current = current.offsetParent;
 	}
+	var elementScrollTop = document.documentElement.scrollTop;
 
-	return actualTop;
+	return actualTop - elementScrollTop;
 }
 
 //扩展classList方法，一次可以添加多个类名,classList本质上是DOMTokenList
 DOMTokenList.prototype.adds = function (str) {
 	str.split(' ').forEach(function (s) {
+		console.log(this);
 		this.add(s);
 	}.bind(this));
 
 	return this;
+}
+
+//控制气泡位置
+function bubblePosCtrl (ele, bub, msg) {
+	
+	bubbleDirectionInit(ele, bub, msg);
+
+	var top = getElementViewTop(bub);
+	var left = getElementViewLeft(bub);
+	var right = document.documentElement.clientWidth - left - bub.clientWidth;
+
+	if (left < 0) {
+		//arrow in left
+		bub.setAttribute('class', '');
+		bub.classList.adds('bubble bubble-left');
+		bub.style.left = (getElementViewLeft(ele) + ele.offsetWidth + 30) + 'px';
+		bub.style.top = (getElementViewTop(ele)) + 'px';
+	} else if (right < 0) {
+		//arrow in right
+		bub.setAttribute('class', '');
+		bub.classList.adds('bubble bubble-right');
+		bub.style.left = (getElementViewLeft(ele) - bub.offsetWidth - 30) + 'px';
+		bub.style.top = (getElementViewTop(ele)) + 'px';
+	} else if (top < 0) {
+		//arrow in top
+		bub.setAttribute('class', '');
+		bub.classList.adds('bubble bubble-top');
+		bub.style.top = (getElementViewTop(ele) + 60) + 'px';
+		bub.style.left = (getElementViewLeft(ele) - Math.floor(bub.offsetWidth/2)) + 'px';
+	} else {
+		//arrow in bottom	
+	}
+}
+
+function bubbleDirectionInit (ele, bub, msg) {
+	//初始化位置用arrow in bottom的默认位置，看是否越界或被遮盖
+	bub.setAttribute('class', '');
+	bub.classList.adds('bubble bubble-bottom');
+	bub.innerHTML = message;
+	element.parentNode.insertBefore(bub, ele);
+	bub.style.top = (ele.offsetTop - bub.offsetHeight - 30) + 'px';
+	bub.style.left = (ele.offsetLeft - Math.floor(bub.offsetWidth/2)) + 'px';
 }
