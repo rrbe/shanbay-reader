@@ -1,54 +1,46 @@
-//因为过滤广告后只有标题，正文和配图，所以页面上的单词就是标题和正文的单词，暂时先这么处理
-function wrapSpan() {
-	var paragrah = document.querySelectorAll('p');
-	for (var i=0; i<paragrah.length; i++) {
-		var words = paragrah[i].innerHTML.split(' ');
+var searchBase = 'https://api.shanbay.com/bdc/search/?word=';
+
+function wrapSpan(ele) {
+	for (var i=0; i<ele.length; i++) {
+		var words = ele[i].innerHTML.split(' ');
 		for (var j=0; j<words.length; j++) {
 			if (words[j] != '') {
 				words[j]= '<span class="words">'+ words[j] +'</span>';
 			}
 		}
-		paragrah[i].innerHTML = words.join(' ');
+		ele[i].innerHTML = words.join(' ');
 	}
-	var article = document.querySelector('.content_article-body');
-	article.addEventListener('click', function (e) {
-		var event = e || window.event;
-		//达到点击下一个词，上一个选中颜色取消的效果
-		var cliWords = document.querySelectorAll('.words');
-		for (var i=0; i<cliWords.length; i++) {
-			cliWords[i].style.backgroundColor = '#ffffff';
-		}
-		var tar = event.target;
-		tar.style.backgroundColor = '#66cc99';
-
-		var searchLink = 'https://api.shanbay.com/bdc/search/?word=' + tar.innerHTML;
-		makeHttpRequest('get', searchLink,
-			null, function (res) {
-				if (res.status_code == 0) {
-					var _bubble = bubbleBox(tar, res.data);
-					_bubble();
-
-				}
-			});
-		event.stopPropagation();
-	}, false);
 }
-wrapSpan();
 
-//封装ajax请求
-function makeHttpRequest(method, url, data, callback) {
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState == 4) {
-			callback(JSON.parse(xhr.responseText));
-		}
+var h1Tag = document.querySelectorAll('h1');
+var fiTags = document.querySelectorAll('figure > figcaption');
+var pTags = document.querySelectorAll('p');
+var liTags = document.querySelectorAll('ul > li');
+var articleTag = document.querySelector('article');
+wrapSpan(h1Tag);
+wrapSpan(fiTags);
+wrapSpan(pTags);
+wrapSpan(liTags);
+
+article.addEventListener('click', function (e) {
+	var event = e || window.event;
+	var tar = event.target;
+	var cliWords = document.querySelectorAll('.words');
+
+	//达到点击下一个词，上一个选中颜色取消的效果
+	for (var i=0; i<cliWords.length; i++) {
+		cliWords[i].style.backgroundColor = '#ffffff';
 	}
-	xhr.onerror = function () {
-		console.log('something wrong!');
-	}
-	xhr.open(method, url ,true);
-	xhr.send(data);
-}
+	tar.style.background = 'rgba(75,198,223,0.4)';
+
+	makeHttpRequest('get', searchBase + tar.innerHTML, null,
+		function (res) {
+			if (res.status_code == 0) {
+				var _bubble = bubbleBox(tar, res.data);
+				_bubble();
+			}
+		});
+}, false);
 
 //单例模式, 可用于气泡弹出框
 var singleton = function(fn){
@@ -57,6 +49,7 @@ var singleton = function(fn){
         return result || (result = fn.apply(this, arguments));
     }
 }
+
 var bubble = singleton(function () {
 	return document.createElement('span');
 });
@@ -111,15 +104,6 @@ function getElementViewTop (ele) {
 	var elementScrollTop = document.documentElement.scrollTop;
 
 	return actualTop - elementScrollTop;
-}
-
-//扩展classList方法，一次可以添加多个类名,classList本质上是DOMTokenList
-DOMTokenList.prototype.adds = function (str) {
-	str.split(' ').forEach(function (s) {
-		this.add(s);
-	}.bind(this));
-
-	return this;
 }
 
 //控制气泡位置

@@ -8,6 +8,7 @@
 	text-align: center;
 	border: 1px solid #cccccc;
 	border-radius: 5px;
+	font-size: 16px;
 }
 .bubble-bottom::after, .bubble-top::before, .bubble-left::after, .bubble-right::after{
 	content: "";
