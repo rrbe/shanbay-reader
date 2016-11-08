@@ -24,8 +24,12 @@
 
     "content_scripts": [
         {
-            "matches": ["http://localhost/test.html"],
-            "js": ["js/getWords.js"],
+            "matches": ["https://www.theguardian.com/*", "http://www.theguardian.com/*"],
+            "js": [
+                "js/extendFunction.js",
+                "js/adFilter.js",
+                "js/getWords.js"
+            ],
             "css": ["css/bubble.css"]
         }
     ],
