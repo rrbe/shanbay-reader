@@ -3,6 +3,7 @@
 	var docEle = document.body;
 	var article = document.getElementById('article');
 	article.removeOthers(docEle);
+	article.removeSiblings();
 
 	var h1tag = document.getElementsByTagName('h1')[0];
 	h1tag.removeSiblings();

@@ -28,7 +28,8 @@
             "js": [
                 "js/extendFunction.js",
                 "js/adFilter.js",
-                "js/getWords.js"
+                "js/getWords.js",
+                "js/slicePages.js"
             ],
             "css": ["css/bubble.css"]
         }

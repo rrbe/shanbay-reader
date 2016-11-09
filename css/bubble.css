@@ -39,3 +39,19 @@
 	right: -30px;
 	top: 5%;
 }
+
+.page {
+	position: absolute;
+	right: 100px;
+	bottom: 0px;
+	margin: 0 auto;
+	background-color: #cccccc;
+}
+
+.page ul li {
+	float: left;
+	width: 25px;
+	text-align: center;
+	list-style: none;
+	cursor: pointer;
+}
