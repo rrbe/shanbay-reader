@@ -1,4 +1,6 @@
 ;(function () {
+	//分页原理：利用修改top属性达到移动页面的效果。同时禁止屏幕scroll。
+
 	document.documentElement.style.overflow = 'hidden';
 	document.body.style.overflow = 'hidden';
 	// document.body.bind('touchmove', function (e) {
@@ -37,7 +39,6 @@
 	}
 
 	function getSliced(index) {
-		console.log(index);
 		var indx = parseInt(index) - 1;
 		if (indx !== 0) {
 			head.style['top'] = '-' + viewHeight + 'px';

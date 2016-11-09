@@ -7,7 +7,8 @@
 
     "permissions": [
         "tabs",
-        "https://api.shanbay.com/"
+        "https://api.shanbay.com/*",
+        "http://media.shanbay.com/*"
     ],
     
     "browser_action": {

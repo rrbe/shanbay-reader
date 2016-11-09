@@ -1,9 +1,9 @@
 ;(function () {
-	//从页面的主体article标签起，从head到content，从外到里，逐层处理广告过滤
+	//广告过滤原理：从页面的主体article标签起，从head到content，从外到里，逐层处理广告过滤。顺序不能乱
+
 	var docEle = document.body;
 	var article = document.getElementById('article');
 	article.removeOthers(docEle);
-	article.removeSiblings();
 
 	var h1tag = document.getElementsByTagName('h1')[0];
 	h1tag.removeSiblings();
@@ -21,4 +21,9 @@
 
 	var sub_meta = document.getElementsByClassName('submeta')[0];
 	sub_meta.remove();
+
+	//除掉广告后还会自动再加载,这里做重复处理
+	setInterval(function () {
+		article.removeSiblings();
+	}, 1000);
 })();

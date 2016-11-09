@@ -1,4 +1,6 @@
 ;(function () {
+	//页面点击取词原理：首先选出文本，给文本加上span标签，然后用事件委托，点击从扇贝网查词API取得释义和读音
+
 	var searchBase = 'https://api.shanbay.com/bdc/search/?word=';
 
 	function wrapSpan(ele) {
@@ -23,7 +25,7 @@
 	wrapSpan(pTags);
 	wrapSpan(liTags);
 
-	article.addEventListener('click', function (e) {
+	articleTag.addEventListener('click', function (e) {
 		var event = e || window.event;
 		var tar = event.target;
 		var cliWords = document.querySelectorAll('.words');
@@ -52,7 +54,8 @@
 	}
 
 	var bubble = singleton(function () {
-		return document.createElement('span');
+		var wspan = document.createElement('span');
+		return wspan;
 	});
 
 	var speakerImg = singleton(function (prop) {
@@ -156,8 +159,7 @@
 	}
 
 	function speakerCtrl (spker, bub) {
-		spker.style.position = 'absolute';
-		spker.style.zIndex = 999;
+		spker.classList.add('speaker');
 		spker.style.top = (bub.offsetTop + 10) + 'px';
 		spker.style.left = (bub.offsetLeft + 10) + 'px';
 

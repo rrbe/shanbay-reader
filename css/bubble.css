@@ -9,6 +9,7 @@
 	border: 1px solid #cccccc;
 	border-radius: 5px;
 	font-size: 16px;
+	z-index: 998;
 }
 .bubble-bottom::after, .bubble-top::before, .bubble-left::after, .bubble-right::after{
 	content: "";
@@ -38,6 +39,11 @@
 	border-color: transparent #cccccc;
 	right: -30px;
 	top: 5%;
+}
+.speaker {
+	position: absolute;
+	cursor: pointer;
+	z-index: 999;
 }
 
 .page {
